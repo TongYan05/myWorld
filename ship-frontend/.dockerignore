@@ -1,0 +1,10 @@
+# D:\新建文件夹\java\javacode\ship\ship-frontend\.dockerignore
+
+node_modules
+dist
+dist.zip
+.vscode
+*.iml
+*.md
+.git
+.gitignore

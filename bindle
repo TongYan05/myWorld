@@ -1,0 +1,23 @@
+$env:JAVA_HOME = "C:\Users\33265\.jdks\ms-17.0.19"
+cd D:\新建文件夹\java\javacode\ship\DigitalManagement
+.\mvnw.cmd clean package -DskipTests
+
+cd ship-frontend
+npm run build
+
+【历史故障复盘：Nginx 反向代理导致接口 404】
+1. 故障现象：
+前端页面能打开，但登录接口（/api/userInfo/login）一直报 404 Not Found。Java 后端日志（nohup.out）中无报错，且 actuator/mappings 接口不可用，无法直接查看后端路由。
+2. 根本原因：
+Nginx 配置中的 proxy_pass 写法导致路径被错误截断。
+错误配置： location /api/ { proxy_pass http://127.0.0.1:2005/; }
+后果： Nginx 会把 /api/ 前缀去掉，转发给后端的变成了 /userInfo/login。但 Java 后端代码里的接口定义是包含 /api 前缀的，导致路径不匹配。
+正确配置： location /api/ { proxy_pass http://127.0.0.1:2005; }
+修正： 去掉 proxy_pass URL 末尾的斜杠 /，让 Nginx 将完整路径（含 /api）透传给后端。
+3. 解决步骤（标准操作）：
+编辑配置：sudo vim /etc/nginx/sites-enabled/default
+注意：若遇到 E325 swap file 报错，按 E (Edit anyway) 强制进入。
+修改内容：找到 location /api/ 块，删除 proxy_pass 地址最后的 /。
+保存退出：按 Esc -> 输入 :wq -> 回车。
+重载服务：执行 sudo nginx -s reload。
+验证：浏览器强制刷新（Ctrl+F5）重试。

@@ -1,0 +1,11 @@
+# D:\新建文件夹\java\javacode\ship\DigitalManagement\.dockerignore
+
+target/*
+!target/DigitalManagement-0.0.1-SNAPSHOT.jar
+.idea
+.mvn
+*.iml
+*.md
+.git
+.gitattributes
+.gitignore

@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: DigitalManagement
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/ship?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&useInformationSchema=true&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&allowMultiQueries=true&rewriteBatchedStatements=true&batchSize=5000
+    username: tongyan
+    password: 2005
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
+
+server:
+  port: 2005
+  servlet:
+    context-path: /api
+
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto
+  configuration:
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+    map-underscore-to-camel-case: true

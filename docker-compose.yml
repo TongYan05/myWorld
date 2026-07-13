@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # MySQL 数据库服务
+  mysql:
+    image: mysql:8.0
+    container_name: ship-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123456
+      MYSQL_DATABASE: ship
+      MYSQL_USER: tongyan
+      MYSQL_PASSWORD: 2005
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      # 注意：确保当前目录下有 mysqlData 文件夹，否则挂载会失败或变为空目录
+      - ./mysqlData:/docker-entrypoint-initdb.d
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # Spring Boot 后端服务
+  backend:
+    build:
+      # 【修改点】根据截图，后端文件在 backend 文件夹下
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ship-backend
+    restart: always
+    ports:
+      - "2005:2005"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      # 这里的 URL 使用服务名 'mysql' 是正确的
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ship?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&useInformationSchema=true&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&allowMultiQueries=true&rewriteBatchedStatements=true&batchSize=5000
+      SPRING_DATASOURCE_USERNAME: tongyan
+      SPRING_DATASOURCE_PASSWORD: 2005
+
+  # Vue 前端服务（Nginx 部署）
+  frontend:
+    build:
+      # 【修改点】根据截图，前端文件在 frontend 文件夹下
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ship-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql-data:
