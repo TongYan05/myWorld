@@ -43,3 +43,46 @@ npm install
 npm run dev
 # 打包线上部署
 npm run build
+
+English Version
+NEXMAR Intelligent Vessel Management Platform
+Project Overview
+Independently developed a full-stack digital management platform for shipping enterprises, integrating full-business modules including vessel management, seaman administration, voyage tracking and task allocation. The system supports over 6.2 million pieces of vessel business data and is deployed on cloud servers via Docker containerization.
+Combining professional marine engineering knowledge, I built an industry-specific customized management system, implementing massive data migration, SQL performance optimization, multi-threaded batch processing and a standard separated front-end and back-end architecture.
+Complete SQL backup files of million-level database are stored locally and never pushed to code repositories.
+Tech Stack
+Backend Module: DigitalManagement
+Core Frameworks: SpringBoot, MyBatis-Plus
+Database: MySQL with Druid Connection Pool
+Concurrency Utilities: ExecutorService, CountDownLatch
+Build Tool: Maven
+DevOps & Deployment: Docker, Nginx, Linux, AWS & Alibaba Cloud EC2
+Frontend Module: ship-frontend
+Framework: Vue3 + Vite
+UI Component Library: Element Plus
+HTTP Request Library: Axios
+Coding Standard: Composition API
+Core Functions & Technical Highlights
+Massive Data Migration Solution
+Designed a batch import logic with layered verification. Foreign key constraints are temporarily disabled to accelerate migration. The system stably processes 6.21 million vessel data records without any data loss and greatly reduces data import time consumption.
+Database Performance Optimization
+Optimized database indexes and SQL execution plans, and adjusted parameters of Druid connection pool. The average interface query latency was reduced from 2 seconds to 200 milliseconds. Developed standardized RESTful APIs based on Controller-Service-Mapper three-tier architecture and customized global cross-domain configuration.
+Multi-threaded Batch Data Processing
+Implemented parallel generation of sharded large datasets via thread pool, which significantly improves throughput for pressure test mock data generation.
+Domain-Driven Modeling for Shipping Industry
+Constructed layered data structures covering more than 20 technical parameters of vessels. The front-end supports linked editing between fleet overview and single-vessel detail pages to guarantee data consistency.
+Containerized Cloud Deployment
+Packaged full front-end and back-end services with Docker, configured Nginx reverse proxy and load balancing. One unified image is compatible with both development and production environments to standardize operating environments.
+Local Startup Guide
+Backend Startup Steps
+Modify MySQL connection address, username and password in application.yml
+Refresh Maven dependencies and run the main class DigitalManagementApplication to launch backend service
+Frontend Startup Commands
+bash
+运行
+# Install dependencies
+npm install
+# Local development run
+npm run dev
+# Build project for production deployment
+npm run build
